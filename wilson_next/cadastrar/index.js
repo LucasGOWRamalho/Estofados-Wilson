@@ -4,7 +4,15 @@ import Head from 'next/head'; // Importação do Next.js
 import 'https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap';
 import 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
 import 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css';
-import '/css/style.css';
+import '../css/style.css';
+import Link from 'next/link';
+
+<Link href="/cadastrar">
+  <a>
+    <span className="icon"><i className="bi bi-house-door"></i></span>
+    <span className="txtlink">Clientes</span>
+  </a>
+</Link>
 
 export default function Home() {
   const [clientes, setClientes] = useState([]);
@@ -51,31 +59,32 @@ export default function Home() {
       </Head>
 
       {/* Barra lateral */}
-      <nav className="menu-lateral">
-        <div className="btn-expandir">
-          <i className="bi bi-list"></i>
+      <nav class="menu-lateral">
+        <div class="btn-expandir">
+            <i class="bi bi-list"></i>
         </div>
         <ul>
-          <li className="item-menu">
-            <a href="/calendario/agenda.html">
-              <span className="icon"><i className="bi bi-calendar3"></i></span>
-              <span className="txtlink">Agenda</span>
-            </a>
-          </li>
-          <li className="item-menu">
-            <a href="/cadastrar/index.html">
-              <span className="icon"><i className="bi bi-house-door"></i></span>
-              <span className="txtlink">Clientes</span>
-            </a>
-          </li>
-          <li className="item-menu">
-            <a href="#envios">
-              <span className="icon"><i className="bi bi-send"></i></span>
-              <span className="txtlink">Envios</span>
-            </a>
-          </li>
+            <li class="item-menu">
+                <a href="file:///C:/Users/Lucas/Desktop/Wilson/calendario/agenda.html">
+                    <span class="icon"><i class="bi bi-calendar3"></i></span>
+                    <span class="txtlink">Agenda</span>
+                </a>
+            </li>
+            <li class="item-menu">
+                <a href="file:///C:/Users/Lucas/Desktop/Wilson/cadastrar/index.html">
+                    <span class="icon"><i class="bi bi-house-door"></i></span>
+                    <span class="txtlink">Clientes</span>
+                </a>
+            </li>
+            <li class="item-menu">
+                <a href="#envios">
+                    <span class="icon"><i class="bi bi-send"></i></span>
+                    <span class="txtlink">Envios</span>
+                </a>
+            </li>
         </ul>
-      </nav>
+    </nav>
+
 
       {/* Formulário de cadastro */}
       <div className="container mt-5">
