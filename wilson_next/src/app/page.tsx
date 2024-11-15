@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from 'react';
-import Head from 'next/head';
-import '../css/style.css';
+import React, { useState } from "react";
+import Head from "next/head";
+import "../css/style.css";
 
 interface Cliente {
   nome: string;
@@ -19,26 +19,47 @@ interface Cliente {
 
 export default function Home() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
-  const [filtro, setFiltro] = useState('');
+  const [filtro, setFiltro] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
+
     const cliente: Cliente = {
-      nome: (form.elements.namedItem('nome') as HTMLInputElement).value,
-      email: (form.elements.namedItem('email') as HTMLInputElement).value,
-      telefone: (form.elements.namedItem('telefone') as HTMLInputElement).value,
-      cpf: (form.elements.namedItem('cpf') as HTMLInputElement).value,
-      profissao: (form.elements.namedItem('profissao') as HTMLInputElement).value,
-      genero: (form.elements.namedItem('genero') as HTMLInputElement).value,
-      endereco: (form.elements.namedItem('endereco') as HTMLInputElement).value,
-      dataNascimento: (form.elements.namedItem('dataNascimento') as HTMLInputElement).value,
-      numeroPedidos: parseInt((form.elements.namedItem('numeroPedidos') as HTMLInputElement).value),
-      numeroPedidoAtual: parseInt((form.elements.namedItem('numeroPedidoAtual') as HTMLInputElement).value),
-      observacoes: (form.elements.namedItem('observacoes') as HTMLTextAreaElement).value,
+      nome: (form.elements.namedItem("nome") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      telefone: (form.elements.namedItem("telefone") as HTMLInputElement).value,
+      cpf: (form.elements.namedItem("cpf") as HTMLInputElement).value,
+      profissao: (form.elements.namedItem("profissao") as HTMLInputElement).value,
+      genero: (form.elements.namedItem("genero") as HTMLInputElement).value,
+      endereco: (form.elements.namedItem("endereco") as HTMLInputElement).value,
+      dataNascimento: (form.elements.namedItem("dataNascimento") as HTMLInputElement).value,
+      numeroPedidos: parseInt((form.elements.namedItem("numeroPedidos") as HTMLInputElement).value),
+      numeroPedidoAtual: parseInt((form.elements.namedItem("numeroPedidoAtual") as HTMLInputElement).value),
+      observacoes: (form.elements.namedItem("observacoes") as HTMLTextAreaElement).value,
     };
-    setClientes([...clientes, cliente]);
-    form.reset();
+
+    try {
+      const response = await fetch("/api/clientes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cliente),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+        setClientes([...clientes, cliente]);
+        form.reset();
+      } else {
+        const error = await response.json();
+        alert(`Erro: ${error.error}`);
+      }
+    } catch (error) {
+      alert("Erro ao enviar os dados para o servidor.");
+    }
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,8 +104,8 @@ export default function Home() {
         </ul>
       </nav>
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <div style={{ width: '75%', maxWidth: '800px' }}>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <div style={{ width: "75%", maxWidth: "800px" }}>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="nome" className="form-label">Nome</label>
@@ -123,8 +144,8 @@ export default function Home() {
               <input type="number" className="form-control" id="numeroPedidos" name="numeroPedidos" required />
             </div>
             <div className="mb-3">
-              <label htmlFor="codigodopedido" className="form-label">Código do Pedido Atual</label>
-              <input type="number" className="form-control" id="codigodopedido" name="codigodopedido" required />
+              <label htmlFor="numeroPedidoAtual" className="form-label">Código do Pedido Atual</label>
+              <input type="number" className="form-control" id="numeroPedidoAtual" name="numeroPedidoAtual" required />
             </div>
             <div className="mb-3">
               <label htmlFor="observacoes" className="form-label">Observações</label>
@@ -132,34 +153,33 @@ export default function Home() {
             </div>
             <button type="submit" className="btn btn-primary">Cadastrar Cliente</button>
           </form>
-        
 
-      <h2 className="mt-5">Clientes Cadastrados</h2>
-      <input
-        type="text"
-        id="pesquisar"
-        placeholder="Pesquisar em qualquer campo"
-        className="form-control mb-3"
-        onChange={handleSearch}
-      />
-      <ul id="clientes-list" className="list-group">
-        {clientesFiltrados.map((cliente, index) => (
-          <li key={index} className="list-group-item">
-            <strong>Nome:</strong> {cliente.nome} <br />
-            <strong>Email:</strong> {cliente.email} <br />
-            <strong>Telefone:</strong> {cliente.telefone} <br />
-            <strong>CPF:</strong> {cliente.cpf} <br />
-            <strong>Profissão:</strong> {cliente.profissao} <br />
-            <strong>Gênero:</strong> {cliente.genero} <br />
-            <strong>Endereço:</strong> {cliente.endereco} <br />
-            <strong>Data de Nascimento:</strong> {cliente.dataNascimento} <br />
-            <strong>Número de Pedidos Realizados:</strong> {cliente.numeroPedidos} <br />
-            <strong>Número do Pedido Atual:</strong> {cliente.numeroPedidoAtual} <br />
-            <strong>Observações:</strong> {cliente.observacoes}
-          </li>
-        ))}
-      </ul>
-      </div>
+          <h2 className="mt-5">Clientes Cadastrados</h2>
+          <input
+            type="text"
+            id="pesquisar"
+            placeholder="Pesquisar em qualquer campo"
+            className="form-control mb-3"
+            onChange={handleSearch}
+          />
+          <ul id="clientes-list" className="list-group">
+            {clientesFiltrados.map((cliente, index) => (
+              <li key={index} className="list-group-item">
+                <strong>Nome:</strong> {cliente.nome} <br />
+                <strong>Email:</strong> {cliente.email} <br />
+                <strong>Telefone:</strong> {cliente.telefone} <br />
+                <strong>CPF:</strong> {cliente.cpf} <br />
+                <strong>Profissão:</strong> {cliente.profissao} <br />
+                <strong>Gênero:</strong> {cliente.genero} <br />
+                <strong>Endereço:</strong> {cliente.endereco} <br />
+                <strong>Data de Nascimento:</strong> {cliente.dataNascimento} <br />
+                <strong>Número de Pedidos Realizados:</strong> {cliente.numeroPedidos} <br />
+                <strong>Número do Pedido Atual:</strong> {cliente.numeroPedidoAtual} <br />
+                <strong>Observações:</strong> {cliente.observacoes}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </>
   );
