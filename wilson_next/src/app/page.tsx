@@ -84,13 +84,13 @@ export default function Home() {
       <nav className="menu-lateral">
         <ul>
           <li className="item-menu">
-            <a href="/calendario/agenda.html">
+            <a href="/agenda.tsx">
               <span className="icon"><i className="bi bi-calendar3"></i></span>
               <span className="txtlink">Agenda</span>
             </a>
           </li>
           <li className="item-menu">
-            <a href="/cadastrar/index.html">
+            <a href="/page.tsx">
               <span className="icon"><i className="bi bi-house-door"></i></span>
               <span className="txtlink">Clientes</span>
             </a>
