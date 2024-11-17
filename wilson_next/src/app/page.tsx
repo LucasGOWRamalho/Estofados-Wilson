@@ -84,7 +84,7 @@ export default function Home() {
       <nav className="menu-lateral">
         <ul>
           <li className="item-menu">
-            <a href="/agenda.tsx">
+            <a href="/agenda">
               <span className="icon"><i className="bi bi-calendar3"></i></span>
               <span className="txtlink">Agenda</span>
             </a>
