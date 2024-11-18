@@ -1,4 +1,4 @@
-"use client";
+"use agenda";
 
 import { useEffect } from 'react';
 import styles from '../styles/Calendar.module.css';
