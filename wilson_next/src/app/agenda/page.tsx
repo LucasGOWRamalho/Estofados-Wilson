@@ -1,220 +1,169 @@
 "use client";
 
-import { useEffect } from 'react';
-import styles from '../styles/Calendar.module.css';
+import { useEffect } from "react";
+import styles from "../styles/Calendar.module.css";
 
 export default function Calendar() {
   useEffect(() => {
-    // Código JavaScript do calendário
-    (function ($) {
-      "use strict";
+    const monthNames = [
+      "Janeiro",
+      "Fevereiro",
+      "Março",
+      "Abril",
+      "Maio",
+      "Junho",
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Outubro",
+      "Novembro",
+      "Dezembro",
+    ];
 
-      document.addEventListener("DOMContentLoaded", function () {
-        var today = new Date(),
-          year = today.getFullYear(),
-          month = today.getMonth(),
-          monthTag = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-          ],
-          day = today.getDate(),
-          days = document.getElementsByTagName("td"),
-          selectedDay: Date | null = null,
-          setDate: Date | undefined,
-          daysLen = days.length;
+    let today = new Date();
+    let selectedDay: Date | null = null;
 
-        class Calendar {
-          private options?: string;
+    interface CalendarType {
+      current: { year: number; month: number; day: number };
+      draw: () => void;
+      updateHeader: (day?: number) => void;
+      populateDays: () => void;
+      addEventListeners: () => void;
+      changeMonth: (offset: number) => void;
+      selectDay: (target: HTMLElement) => void;
+      reset: () => void;
+    }
 
-          constructor(selector: string, options?: string) {
-            this.options = options;
-            this.draw();
-          }
+    const calendar: CalendarType = {
+      current: {
+        year: today.getFullYear(),
+        month: today.getMonth(),
+        day: today.getDate(),
+      },
 
-          draw(): void {
-            this.getCookie("selected_day");
-            this.getOptions();
-            this.drawDays();
-            var that = this,
-              reset = document.getElementById("reset"),
-              pre = document.getElementsByClassName("pre-button"),
-              next = document.getElementsByClassName("next-button");
+      draw() {
+        this.updateHeader();
+        this.populateDays();
+        this.addEventListeners();
+      },
 
-            if (reset && pre[0] && next[0]) {
-              pre[0].addEventListener("click", function () {
-                that.preMonth();
-              });
-              next[0].addEventListener("click", function () {
-                that.nextMonth();
-              });
-              reset.addEventListener("click", function () {
-                that.reset();
-              });
-            }
-            while (daysLen--) {
-              days[daysLen].addEventListener("click", function () {
-                that.clickDay(this);
-              });
-            }
-          }
 
-          drawHeader(e?: number): void {
-            var headDay = document.getElementsByClassName("head-day"),
-              headMonth = document.getElementsByClassName("head-month");
 
-            if (headDay[0] instanceof HTMLElement && headMonth[0] instanceof HTMLElement) {
-              e ? (headDay[0].innerHTML = e.toString()) : (headDay[0].innerHTML = day.toString());
-              headMonth[0].innerHTML = monthTag[month] + " - " + year;
-            }
-          }
+      populateDays() {
+        const calendarTable = document.querySelector("#calendar tbody");
+        const startDay = new Date(this.current.year, this.current.month, 1).getDay();
+        const totalDays = new Date(this.current.year, this.current.month + 1, 0).getDate();
 
-          drawDays(): void {
-            var startDay = new Date(year, month, 1).getDay(),
-              nDays = new Date(year, month + 1, 0).getDate(),
-              n = startDay;
-
-            for (var k = 0; k < 42; k++) {
-              if (days[k] instanceof HTMLElement) {
-                days[k].innerHTML = "";
-                days[k].id = "";
-                days[k].className = "";
-              }
-            }
-
-            for (var i = 1; i <= nDays; i++) {
-              if (days[n] instanceof HTMLElement) {
-                days[n].innerHTML = i.toString();
-              }
-              n++;
-            }
-
-            for (var j = 0; j < 42; j++) {
-              if (days[j] instanceof HTMLElement) {
-                if (days[j].innerHTML === "") {
-                  days[j].id = "disabled";
-                } else if (j === day + startDay - 1) {
-                  if (
-                    (this.options &&
-                      setDate &&
-                      month === setDate.getMonth() &&
-                      year === setDate.getFullYear()) ||
-                    (!this.options &&
-                      month === today.getMonth() &&
-                      year === today.getFullYear())
-                  ) {
-                    this.drawHeader(day);
-                    days[j].id = "today";
-                  }
-                }
-                if (selectedDay) {
-                  if (
-                    j === selectedDay.getDate() + startDay - 1 &&
-                    month === selectedDay.getMonth() &&
-                    year === selectedDay.getFullYear()
-                  ) {
-                    days[j].className = "selected";
-                    this.drawHeader(selectedDay.getDate());
-                  }
-                }
-              }
-            }
-          }
-
-          clickDay(o: HTMLElement): void {
-            var selected = document.getElementsByClassName("selected"),
-              len = selected.length;
-            if (len !== 0) {
-              selected[0].className = "";
-            }
-            o.className = "selected";
-            selectedDay = new Date(year, month, parseInt(o.innerHTML));
-            this.drawHeader(parseInt(o.innerHTML));
-            this.setCookie("selected_day", 1);
-          }
-
-          preMonth(): void {
-            if (month < 1) {
-              month = 11;
-              year = year - 1;
-            } else {
-              month = month - 1;
-            }
-            this.drawHeader(1);
-            this.drawDays();
-          }
-
-          nextMonth(): void {
-            if (month >= 11) {
-              month = 0;
-              year = year + 1;
-            } else {
-              month = month + 1;
-            }
-            this.drawHeader(1);
-            this.drawDays();
-          }
-
-          getOptions(): void {
-            if (this.options) {
-              var sets = this.options.split("-");
-              setDate = new Date(parseInt(sets[0]), parseInt(sets[1]) - 1, parseInt(sets[2]));
-              day = setDate.getDate();
-              year = setDate.getFullYear();
-              month = setDate.getMonth();
-            }
-          }
-
-          reset(): void {
-            month = today.getMonth();
-            year = today.getFullYear();
-            day = today.getDate();
-            this.options = undefined;
-            this.drawDays();
-          }
-
-          setCookie(name: string, expiredays: number): void {
-            if (expiredays) {
-              var date = new Date();
-              date.setTime(date.getTime() + expiredays * 24 * 60 * 60 * 1000);
-              var expires = "; expires=" + date.toUTCString();
-            } else {
-              var expires = "";
-            }
-            document.cookie = name + "=" + (selectedDay ? selectedDay.toISOString() : "") + expires + "; path=/";
-          }
-
-          getCookie(name: string): void {
-            if (document.cookie.length) {
-              var arrCookie = document.cookie.split(";"),
-                nameEQ = name + "=";
-              for (var i = 0, cLen = arrCookie.length; i < cLen; i++) {
-                var c = arrCookie[i];
-                while (c.charAt(0) == " ") {
-                  c = c.substring(1, c.length);
-                }
-                if (c.indexOf(nameEQ) === 0) {
-                  selectedDay = new Date(
-                    c.substring(nameEQ.length, c.length)
-                  );
-                }
-              }
-            }
-          }
+        if (calendarTable) {
+          calendarTable.innerHTML = "";
         }
 
-        var calendar = new Calendar("");
-      });
-    })();
+        let dayIndex = 0;
+        for (let row = 0; row < 6; row++) {
+          const tr = document.createElement("tr");
+
+          for (let col = 0; col < 7; col++) {
+            const td = document.createElement("td");
+            const day = dayIndex - startDay + 1;
+
+            if (day > 0 && day <= totalDays) {
+              td.textContent = day.toString();
+              td.className = "day";
+
+              if (day === this.current.day &&
+                this.current.month === today.getMonth() &&
+                this.current.year === today.getFullYear()) {
+                td.id = "today";
+              }
+
+              if (selectedDay &&
+                selectedDay.getDate() === day &&
+                selectedDay.getMonth() === this.current.month &&
+                selectedDay.getFullYear() === this.current.year) {
+                td.classList.add("selected");
+              }
+            } else {
+              td.id = "disabled";
+            }
+
+            tr.appendChild(td);
+            dayIndex++;
+          }
+
+          if (calendarTable) {
+            calendarTable.appendChild(tr);
+          }
+        }
+      },
+
+      addEventListeners() {
+        const prevButton = document.querySelector(".pre-button");
+        const nextButton = document.querySelector(".next-button");
+        const resetButton = document.querySelector("#reset");
+        const days = document.querySelectorAll(".day");
+
+        if (prevButton) {
+          prevButton.addEventListener("click", () => this.changeMonth(-1));
+        }
+
+        if (nextButton) {
+          nextButton.addEventListener("click", () => this.changeMonth(1));
+        }
+
+        if (resetButton) {
+          resetButton.addEventListener("click", () => this.reset());
+        }
+
+        days.forEach((day) => {
+          day.addEventListener("click", (event) => {
+            if (event.target instanceof HTMLElement) {
+              this.selectDay(event.target);
+            }
+          });
+        });
+      },
+
+      changeMonth(offset: number) {
+        this.current.month += offset;
+
+        if (this.current.month < 0) {
+          this.current.month = 11;
+          this.current.year -= 1;
+        } else if (this.current.month > 11) {
+          this.current.month = 0;
+          this.current.year += 1;
+        }
+
+        this.draw();
+      },
+
+      selectDay(target: HTMLElement) {
+        if (target.className.includes("day")) {
+          const selected = document.querySelector(".selected");
+          if (selected) selected.classList.remove("selected");
+
+          target.classList.add("selected");
+
+          selectedDay = new Date(this.current.year, this.current.month, parseInt(target.textContent || "1"));
+          this.updateHeader(selectedDay.getDate());
+        }
+      },
+
+      reset() {
+        this.current = {
+          year: today.getFullYear(),
+          month: today.getMonth(),
+          day: today.getDate(),
+        };
+        selectedDay = null;
+        this.draw();
+      },
+      updateHeader: function (day?: number): void {
+        throw new Error("Function not implemented.");
+      }
+    };
+
+    calendar.draw();
   }, []);
 
   return (
@@ -222,35 +171,30 @@ export default function Calendar() {
       <div id="calendar-container">
         <div className="elegant-calendar">
           <div id="header">
-            <div className="pre-button"></div>
+            <button className="pre-button">←</button>
             <div className="head-info">
               <div className="head-day">Day</div>
               <div className="head-month">Month</div>
             </div>
-            <div className="next-button"></div>
+            <button className="next-button">→</button>
           </div>
           <table id="calendar">
             <thead>
               <tr>
-                <th>Sun</th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-                <th>Sat</th>
+                <th>Dom</th>
+                <th>Seg</th>
+                <th>Ter</th>
+                <th>Qua</th>
+                <th>Qui</th>
+                <th>Sex</th>
+                <th>Sab</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                {/* Os dias do calendário serão preenchidos dinamicamente */}
-              </tr>
-            </tbody>
+            <tbody></tbody>
           </table>
           <button id="reset">Reset</button>
         </div>
       </div>
     </div>
   );
- }
-
+}
