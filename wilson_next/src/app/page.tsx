@@ -70,10 +70,10 @@ export default function Home() {
             </Link>
           </li>
           <li className="item-menu">
-            <a href="wilson_next/src/app/page.tsx">
+            <Link href="/app">
               <span className="icon"><i className="bi bi-house-door"></i></span>
               <span className="txtlink">Clientes</span>
-            </a>
+            </Link>
           </li>
           <li className="item-menu">
             <a href="#envios">
