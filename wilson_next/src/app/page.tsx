@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import '../css/style.css';
+import Link from 'next/link';
 
 interface Cliente {
   nome: string;
@@ -61,15 +62,15 @@ export default function Home() {
       </Head>
 
       <nav className="menu-lateral">
-        <ul>
+         <ul>
           <li className="item-menu">
-            <a href="/calendario/agenda.html">
+           <Link href="/calendario">
               <span className="icon"><i className="bi bi-calendar3"></i></span>
               <span className="txtlink">Agenda</span>
-            </a>
+            </Link>
           </li>
           <li className="item-menu">
-            <a href="/cadastrar/index.html">
+            <a href="wilson_next/src/app/page.tsx">
               <span className="icon"><i className="bi bi-house-door"></i></span>
               <span className="txtlink">Clientes</span>
             </a>
