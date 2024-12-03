@@ -1,5 +1,10 @@
+"use cliente";
 import Head from "next/head";
-import "../css/bootstrap/_media.css";
+import "../agenda/css/style.css";
+import Link from "next/link";
+
+
+
 
 export default function Calendar() {
   return (
@@ -36,28 +41,28 @@ export default function Calendar() {
           </div>
           <ul>
             <li className="item-menu">
-              <a href="Estofados-Wilson/wilson_next/src/app/agenda/page.tsx">
+              <Link href="Estofados-Wilson/wilson_next/src/app/agenda/page.tsx">
                 <span className="icon">
                   <i className="bi bi-calendar3"></i>
                 </span>
                 <span className="txtlink">Agenda</span>
-              </a>
+              </Link>
             </li>
             <li className="item-menu">
-              <a href="Estofados-Wilson/wilson_next/src/app/page.tsx">
+              <Link href="../app/page.tsx">
                 <span className="icon">
                   <i className="bi bi-house-door"></i>
                 </span>
                 <span className="txtlink">Clientes</span>
-              </a>
+              </Link>
             </li>
             <li className="item-menu">
-              <a href="#envios">
+              <Link href="#envios">
                 <span className="icon">
                   <i className="bi bi-send"></i>
                 </span>
                 <span className="txtlink">Envios</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
