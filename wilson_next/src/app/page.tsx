@@ -170,7 +170,7 @@ export default function Home() {
           </div>
           <ul>
             <li className="item-menu">
-              <Link href="Estofados-Wilson/wilson_next/src/app/agenda/page.tsx">
+              <Link href="agenda">
                 <span className="icon">
                   <i className="bi bi-calendar3"></i>
                 </span>
@@ -178,7 +178,7 @@ export default function Home() {
               </Link>
             </li>
             <li className="item-menu">
-              <Link href="../app/page.tsx">
+              <Link href="/">
                 <span className="icon">
                   <i className="bi bi-house-door"></i>
                 </span>
@@ -186,7 +186,7 @@ export default function Home() {
               </Link>
             </li>
             <li className="item-menu">
-              <Link href="#envios">
+              <Link href="Campanha">
                 <span className="icon">
                   <i className="bi bi-send"></i>
                 </span>
